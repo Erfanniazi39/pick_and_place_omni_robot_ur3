@@ -138,6 +138,8 @@ source ~/ros2_ws/install/setup.bash
 ```bash
 ros2 launch omni_gazebo omni_gazebo.launch.py
 ```
+![Alt text](img_1.png)
+
 
 This will:
 - Start Gazebo with physics simulation
