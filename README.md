@@ -41,7 +41,7 @@ Task Execution Layer
     ├── Arm grasping & manipulation
     ├── Base navigation & positioning
     └── Color matching workflow
-
+```
 
 ## Package Descriptions
 
@@ -74,3 +74,4 @@ The main task program. Detects colored cubes, picks them up, and places them nex
 5. Match colors and locate target
 6. Navigate base to target position
 7. Place small cube beside matching large cube
+
