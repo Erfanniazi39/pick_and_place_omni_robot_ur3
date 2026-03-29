@@ -1,0 +1,17 @@
+- ros_topic_name: "clock"
+  gz_topic_name: "clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "ignition.msgs.Clock"
+  direction: GZ_TO_ROS
+
+# Full set of configurations
+# - ros_topic_name: "ros_chatter"
+#   gz_topic_name: "gz_chatter"
+#   ros_type_name: "std_msgs/msg/String"
+#   gz_type_name: "gz.msgs.StringMsg"
+#   subscriber_queue: 10       # Default 10
+#   publisher_queue: 10        # Default 10
+#   lazy: false                # Default "false"
+#   direction: BIDIRECTIONAL  # Default "BIDIRECTIONAL" - Bridge both directions
+#                             # "GZ_TO_ROS" - Bridge Gz topic to ROS
+#                             # "ROS_TO_GZ" - Bridge ROS topic to Gz

@@ -1,0 +1,7 @@
+image: /home/legionaire/ros2_ws/src/omni_navigation/maps/my_map.pgm
+mode: trinary
+resolution: 0.050
+origin: [-17.956, -6.596, 0]
+negate: 0
+occupied_thresh: 0.15
+free_thresh: 0.80

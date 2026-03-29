@@ -1,0 +1,42 @@
+/move_group:
+  ros__parameters:
+    move_group:
+      planning_plugin: ompl_interface/OMPLPlanner
+      request_adapters:
+        - default_planner_request_adapters/FixWorkspaceBounds
+        - default_planner_request_adapters/FixStartStateBounds
+        - default_planner_request_adapters/FixStartStateCollision
+        - default_planner_request_adapters/FixStartStateDefaults
+        - default_planner_request_adapters/AddTimeOptimalParameterization
+      start_state_max_bounds_error: 0.1
+      jiggle_fraction: 0.05
+      default_planning_pipeline: ompl
+      pipelines: [ompl]
+      
+      ompl:
+        planner_configs:
+          - RRTConnect
+          - RRT
+          - RRTstar
+          - EST
+        planner_specific_params:
+          RRTConnect:
+            type: geometric::RRTConnect
+            range: 0.0
+          RRT:
+            type: geometric::RRT
+            range: 0.0
+            goal_bias: 0.05
+          RRTstar:
+            type: geometric::RRTstar
+            range: 0.0
+            goal_bias: 0.05
+          EST:
+            type: geometric::EST
+            range: 0.0
+            goal_bias: 0.05
+
+    trajectory_execution:
+      allowed_execution_duration_scaling: 1.5
+      allowed_goal_duration_margin: 0.75
+      moveit_manage_controllers: false

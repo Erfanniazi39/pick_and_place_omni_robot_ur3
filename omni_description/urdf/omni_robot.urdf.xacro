@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="omni_robot">
+
+    <xacro:arg name="use_ros2_control" default="true"/>
+
+    <!-- Include macros -->
+    <xacro:include filename="$(find omni_description)/urdf/include/base.urdf.xacro"/>
+    <xacro:include filename="$(find omni_description)/urdf/include/wheel.urdf.xacro"/>
+    <xacro:include filename="$(find omni_description)/urdf/include/omni.ros2_control.xacro"/>
+    <xacro:include filename="$(find omni_description)/urdf/include/omni.gz_ros2_control.xacro"/>
+    <xacro:include filename="$(find omni_description)/urdf/include/lidar.urdf.xacro"/>
+    <xacro:include filename="$(find omni_description)/urdf/include/camera.urdf.xacro"/>
+    <xacro:include filename="$(find omni_description)/urdf/include/gripper.urdf.xacro"/>
+    <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+
+    <!-- Robot Parameters -->
+    <!-- Base cylinder parameters -->
+    <xacro:property name="base_mass" value="2.0"/>
+    <xacro:property name="base_radius" value="0.35"/>
+    <xacro:property name="base_height" value="0.15"/>
+
+    <!-- Wheel parameters -->
+    <xacro:property name="wheel_mass" value="0.5"/>
+    <xacro:property name="wheel_radius" value="0.1"/>
+    <xacro:property name="wheel_width" value="0.06"/>
+    
+    <!-- Distance from robot center to wheel center (omni wheel mounting) -->
+    <xacro:property name="wheel_distance_from_center" value="0.35"/>
+
+    <!-- LiDAR parameters -->
+    <xacro:property name="lidar_mass" value="0.1"/>
+    <xacro:property name="lidar_width" value="0.05"/>
+    <xacro:property name="lidar_height" value="0.05"/>
+    <xacro:property name="lidar_depth" value="0.03"/>
+
+    <!-- Camera parameters -->
+    <xacro:property name="camera_mass" value="0.15"/>
+    <xacro:property name="camera_width" value="0.06"/>
+    <xacro:property name="camera_height" value="0.04"/>
+    <xacro:property name="camera_depth" value="0.05"/>
+
+    <!-- Math constants -->
+    <xacro:property name="PI" value="3.14159265359"/>
+
+    <!-- Create base link -->
+    <xacro:base base_mass="${base_mass}" base_length="${base_height}" base_radius="${base_radius}">
+        <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
+    </xacro:base>
+
+    <xacro:wheel prefix="wheel_1" parent="base_link"
+        wheel_mass="${wheel_mass}"
+        wheel_length="${wheel_width}"
+        wheel_radius="${wheel_radius}">
+        <origin xyz="${wheel_distance_from_center} 0 -${base_height - wheel_radius}"
+                rpy="${PI/2} 0 ${PI/2}"/>
+    </xacro:wheel>
+
+    <xacro:wheel prefix="wheel_2" parent="base_link"
+        wheel_mass="${wheel_mass}"
+        wheel_length="${wheel_width}"
+        wheel_radius="${wheel_radius}">
+        <origin xyz="0 ${wheel_distance_from_center} -${base_height - wheel_radius}"
+                rpy="${PI/2} 0 ${PI}"/>
+    </xacro:wheel>
+
+    <xacro:wheel prefix="wheel_3" parent="base_link"
+        wheel_mass="${wheel_mass}"
+        wheel_length="${wheel_width}"
+        wheel_radius="${wheel_radius}">
+        <origin xyz="-${wheel_distance_from_center} 0 -${base_height - wheel_radius}"
+                rpy="${PI/2} 0 ${3*PI/2}"/>
+    </xacro:wheel>
+
+    <xacro:wheel prefix="wheel_4" parent="base_link"
+        wheel_mass="${wheel_mass}"
+        wheel_length="${wheel_width}"
+        wheel_radius="${wheel_radius}">
+        <origin xyz="0 -${wheel_distance_from_center} -${base_height - wheel_radius}"
+                rpy="${PI/2} 0 0"/>
+    </xacro:wheel>
+
+    <xacro:lidar name="lidar" parent="base_link" lidar_mass="${lidar_mass}"
+                 lidar_length="${lidar_depth}" lidar_width="${lidar_width}" lidar_height="${lidar_height}">
+        <origin xyz="${base_radius} 0 ${base_height/2}" rpy="0 0 0"/>
+    </xacro:lidar>
+
+    <xacro:camera name="front_camera" parent="base_link" camera_mass="${camera_mass}"
+                  camera_length="${camera_depth}" camera_width="${camera_width}" camera_height="${camera_height}">
+        <origin xyz="${base_radius} 0 ${base_height/2 + 0.04}" rpy="0 0 0"/>
+    </xacro:camera>
+
+    <xacro:ur_robot
+        name="ur3"
+        tf_prefix="ur_"
+        parent="base_link"
+        joint_limits_parameters_file="$(find ur_description)/config/ur3/joint_limits.yaml"
+        kinematics_parameters_file="$(find ur_description)/config/ur3/default_kinematics.yaml"
+        physical_parameters_file="$(find ur_description)/config/ur3/physical_parameters.yaml"
+        visual_parameters_file="$(find ur_description)/config/ur3/visual_parameters.yaml"
+        safety_limits="false"
+        force_abs_paths="false">
+        <origin xyz="${base_radius/2} 0 ${base_height/2}" rpy="0 0 0"/>
+    </xacro:ur_robot>
+
+    <xacro:gripper name="gripper" parent="ur_tool0">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:gripper>
+
+    <xacro:if value="$(arg use_ros2_control)">
+        <xacro:omni_ros2_control/>
+        <xacro:omni_gz_ros2_control/>
+    </xacro:if>
+
+</robot>

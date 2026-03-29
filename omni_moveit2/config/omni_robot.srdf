@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<robot name="omni_robot" xmlns:xacro="http://wiki.ros.org/xacro">
+
+    <!-- GROUP 1: UR3 Arm -->
+    <group name="ur3_arm">
+        <joint name="ur_shoulder_pan_joint"/>
+        <joint name="ur_shoulder_lift_joint"/>
+        <joint name="ur_elbow_joint"/>
+        <joint name="ur_wrist_1_joint"/>
+        <joint name="ur_wrist_2_joint"/>
+        <joint name="ur_wrist_3_joint"/>
+    </group>
+
+    <!-- GROUP 2: Gripper -->
+    <group name="gripper">
+        <joint name="gripper_left_finger_joint"/>
+        <joint name="gripper_right_finger_joint"/>
+    </group>
+
+    <!-- GROUP 3: Arm + Gripper -->
+    <group name="arm_with_gripper">
+        <group name="ur3_arm"/>
+        <group name="gripper"/>
+    </group>
+
+    <!-- GROUP 4: Mobile Base (Omni wheels) -->
+    <group name="mobile_base">
+        <joint name="wheel_1_joint"/>
+        <joint name="wheel_2_joint"/>
+        <joint name="wheel_3_joint"/>
+        <joint name="wheel_4_joint"/>
+    </group>
+
+    <!-- GROUP 5: All (everything) -->
+    <group name="whole_robot">
+        <group name="ur3_arm"/>
+        <group name="gripper"/>
+        <group name="mobile_base"/>
+    </group>
+
+    <!-- VIRTUAL JOINT: Connect to world for fixed base -->
+    <virtual_joint name="virtual_world_joint" type="fixed" parent_frame="world" child_link="base_footprint"/>
+
+    <!-- DISABLE COLLISIONS: Gripper parts and expected non-collisions -->
+    <disable_collisions link1="gripper_left_finger_link" link2="gripper_right_finger_link" reason="adjacent fingers" />
+    <disable_collisions link1="gripper_base_link" link2="ur_tool0" reason="gripper base attached to tool0" />
+    <disable_collisions link1="gripper_base_link" link2="gripper_left_finger_link" reason="adjacent" />
+    <disable_collisions link1="gripper_left_finger_link" link2="ur_tool0" reason="finger adjacent to tool0" />
+    <disable_collisions link1="gripper_right_finger_link" link2="ur_tool0" reason="finger adjacent to tool0" />
+
+    <!-- Additional adjacent links from current assembled model -->
+    <disable_collisions link1="base_link" link2="lidar_link" reason="adjacent" />
+    <disable_collisions link1="base_link" link2="wheel_1_link" reason="adjacent" />
+    <disable_collisions link1="base_link" link2="wheel_2_link" reason="adjacent" />
+    <disable_collisions link1="base_link" link2="wheel_3_link" reason="adjacent" />
+    <disable_collisions link1="base_link" link2="wheel_4_link" reason="adjacent" />
+    <disable_collisions link1="base_link" link2="ur_base_link_inertia" reason="adjacent" />
+    <disable_collisions link1="base_link" link2="ur_shoulder_link" reason="adjacent" />
+    <disable_collisions link1="gripper_base_link" link2="gripper_right_finger_link" reason="adjacent" />
+    <disable_collisions link1="gripper_base_link" link2="ur_wrist_2_link" reason="adjacent" />
+    <disable_collisions link1="gripper_base_link" link2="ur_wrist_3_link" reason="adjacent" />
+    <disable_collisions link1="ur_base_link_inertia" link2="ur_shoulder_link" reason="adjacent" />
+    <disable_collisions link1="ur_forearm_link" link2="ur_upper_arm_link" reason="adjacent" />
+    <disable_collisions link1="ur_forearm_link" link2="ur_wrist_1_link" reason="adjacent" />
+    <disable_collisions link1="ur_shoulder_link" link2="ur_upper_arm_link" reason="adjacent" />
+    <disable_collisions link1="ur_wrist_1_link" link2="ur_wrist_2_link" reason="adjacent" />
+    <disable_collisions link1="ur_wrist_2_link" link2="ur_wrist_3_link" reason="adjacent" />
+
+</robot>

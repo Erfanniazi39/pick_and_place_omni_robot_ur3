@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+    <xacro:macro name="wheel" params="prefix parent *origin wheel_mass wheel_length wheel_radius">
+        
+        <joint name="${prefix}_joint" type="continuous">
+            <parent link="${parent}"/>
+            <child link="${prefix}_link"/>
+            <xacro:insert_block name="origin"/>
+            <axis xyz="0 0 1"/>
+            <limit effort="100" velocity="100"/>
+            <dynamics damping="0.001" friction="0.0"/>
+        </joint>
+
+        <link name="${prefix}_link">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+                </geometry>
+                <material name="black">
+                    <color rgba="0.1 0.1 0.1 1.0"/>
+                </material>
+            </visual>
+            
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+                </geometry>
+            </collision>
+            
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="${wheel_mass}"/>
+                <!-- Inertia for a solid cylinder:
+                     Ixx = Iyy = (1/12)*m*(3*r² + L²)
+                     Izz = (1/2)*m*r²
+                -->
+                <inertia 
+                    ixx="${(1.0/12.0) * wheel_mass * (3 * wheel_radius * wheel_radius + wheel_length * wheel_length)}"
+                    iyy="${(1.0/12.0) * wheel_mass * (3 * wheel_radius * wheel_radius + wheel_length * wheel_length)}"
+                    izz="${(1.0/2.0) * wheel_mass * wheel_radius * wheel_radius}"
+                    ixy="0.0"
+                    ixz="0.0"
+                    iyz="0.0"/>
+            </inertial>
+        </link>
+
+        <gazebo reference="${prefix}_link">
+            <self_collide>false</self_collide>
+            <laser_retro>0</laser_retro>
+            <material>Gazebo/Black</material>
+            <mu1>1.0</mu1>
+            <mu2>0.03</mu2>
+            <fdir1>1 0 0</fdir1>
+            <kp>1000000.0</kp>
+            <kd>10.0</kd>
+            <minDepth>0.001</minDepth>
+            <maxVel>0.2</maxVel>
+        </gazebo>
+
+    </xacro:macro>
+
+</robot>

@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <xacro:macro name="lidar" params="name parent *origin lidar_mass lidar_length lidar_width lidar_height">
+      <joint name="${name}_joint" type="fixed">
+          <parent link="${parent}"/>
+          <child link="${name}_link"/>
+          <xacro:insert_block name="origin"/>
+      </joint>
+
+      <link name="${name}_link">
+          <visual>
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <geometry>
+                  <box size="${lidar_length} ${lidar_width} ${lidar_height}"/> 
+              </geometry>
+              <material name="red">
+                  <color rgba="1 0 0 1"/>
+              </material>
+          </visual>
+          <collision>
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <geometry>
+                  <box size="${lidar_length} ${lidar_width} ${lidar_height}"/> 
+              </geometry>
+          </collision>
+          <inertial>
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <mass value="${lidar_mass}"/>
+              <inertia ixx="${lidar_mass * (lidar_height**2 + lidar_width**2) / 12}" ixy="0.0" ixz="0.0"
+                       iyy="${lidar_mass * (lidar_height**2 + lidar_length**2) / 12}" iyz="0.0"
+                       izz="${lidar_mass * (lidar_width**2 + lidar_length**2) / 12}"/>
+          </inertial>
+      </link>
+
+      <gazebo reference="${name}_link">
+          <sensor name="${name}" type="gpu_lidar">
+              <gz_frame_id>${name}_link</gz_frame_id>
+              <topic>scan</topic>
+              <update_rate>10</update_rate>
+              <ray>
+                  <scan>
+                      <horizontal>
+                        <samples>720</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.57079</min_angle>
+                        <max_angle>1.57079</max_angle>
+                      </horizontal>
+                      <vertical>
+                        <samples>1</samples>
+                        <resolution>0.01</resolution>
+                        <min_angle>0</min_angle>
+                        <max_angle>0</max_angle>
+                      </vertical>
+                  </scan>
+                  <range>
+                      <min>0.1</min>
+                      <max>10.0</max>
+                      <resolution>0.01</resolution>
+                  </range>
+              </ray>
+              <alwaysOn>1</alwaysOn>
+          </sensor>
+      </gazebo>
+
+  </xacro:macro>
+
+</robot>
