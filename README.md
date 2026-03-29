@@ -163,6 +163,8 @@ This will:
 6. Navigate to the target position
 7. Place the small cube
 
+![Alt text](img_2.png)
+
 ## Parameter Customization
 
 ### Launch Arguments
